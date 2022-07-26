@@ -1071,7 +1071,8 @@ func (pc *pushConsumer) consumeMessageCurrently(pq *processQueue, mq *primitive.
 					}
 				}
 
-				offset := pq.removeMessage(msgBackSucceed...)
+				pq.removeMessage(msgBackSucceed...)
+				offset := pq.getMinOffset()
 
 				if offset >= 0 && !pq.IsDroppd() {
 					pc.storage.update(mq, int64(offset), true)

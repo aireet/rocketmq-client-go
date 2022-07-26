@@ -196,15 +196,12 @@ func (pq *processQueue) makeMessageToCosumeAgain(messages ...*primitive.MessageE
 	pq.mutex.Unlock()
 }
 
-func (pq *processQueue) removeMessage(messages ...*primitive.MessageExt) int64 {
-	result := int64(-1)
+func (pq *processQueue) removeMessage(messages ...*primitive.MessageExt) {
 	if len(messages) <= 0 {
-		return result
+		return
 	}
 	pq.mutex.Lock()
-	pq.UpdateLastConsumeTime()
 	if !pq.msgCache.Empty() {
-		result = pq.queueOffsetMax + 1
 		removedCount := 0
 		for idx := range messages {
 			msg := messages[idx]
@@ -218,9 +215,16 @@ func (pq *processQueue) removeMessage(messages ...*primitive.MessageExt) int64 {
 
 			pq.cachedMsgSize.Sub(int64(len(msg.Body)))
 		}
-
 		pq.cachedMsgCount.Sub(int64(removedCount))
 	}
+	pq.mutex.Unlock()
+	return
+}
+
+func (pq *processQueue) getMinOffset() int64 {
+	result := int64(-1)
+	pq.mutex.Lock()
+	pq.UpdateLastConsumeTime()
 	if !pq.msgCache.Empty() {
 		first, _ := pq.msgCache.Min()
 		result = first.(int64)
