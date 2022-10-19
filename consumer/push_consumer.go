@@ -804,6 +804,9 @@ func (pc *pushConsumer) pullMessage(request *PullRequest) {
 			pullRequest.SysFlag = clearCommitOffsetFlag(pullRequest.SysFlag)
 		}
 
+		rlog.Info("pullRequest", map[string]interface{}{
+			"detail": pullRequest,
+		})
 		result, err := pc.client.PullMessage(context.Background(), brokerResult.BrokerAddr, pullRequest)
 		if err != nil {
 			rlog.Warning("pull message from broker error", map[string]interface{}{
