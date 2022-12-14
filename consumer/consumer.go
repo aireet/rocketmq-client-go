@@ -935,7 +935,7 @@ func (dc *defaultConsumer) findConsumerList(topic string) []string {
 			rlog.Error("get consumer list of group from broker error", map[string]interface{}{
 				rlog.LogKeyConsumerGroup: dc.consumerGroup,
 				rlog.LogKeyBroker:        brokerAddr,
-				rlog.LogKeyUnderlayError: err,
+				rlog.LogKeyUnderlayError: err.Error(),
 			})
 			return nil
 		}
