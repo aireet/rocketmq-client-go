@@ -103,10 +103,14 @@ func (m *Message) WithProperty(key, value string) {
 }
 
 func (m *Message) GetProperty(key string) string {
+	var res string
 	m.mutex.RLock()
-	v := m.properties[key]
+	if _, ok := m.properties[key]; !ok {
+		res = ""
+	}
+	res = m.properties[key]
 	m.mutex.RUnlock()
-	return v
+	return res
 }
 
 func (m *Message) RemoveProperty(key string) string {
