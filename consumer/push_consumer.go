@@ -73,6 +73,7 @@ type pushConsumer struct {
 	done                         chan struct{}
 	closeOnce                    sync.Once
 	crCh                         map[string]chan struct{}
+	ns                           internal.Namesrvs
 }
 
 func NewPushConsumer(opts ...Option) (*pushConsumer, error) {
@@ -117,6 +118,7 @@ func NewPushConsumer(opts ...Option) (*pushConsumer, error) {
 		done:            make(chan struct{}, 1),
 		consumeFunc:     utils.NewSet(),
 		crCh:            make(map[string]chan struct{}),
+		ns:              defaultOpts.Namesrv,
 	}
 	dc.mqChanged = p.messageQueueChanged
 	if p.consumeOrderly {
@@ -128,6 +130,10 @@ func NewPushConsumer(opts ...Option) (*pushConsumer, error) {
 	p.interceptor = primitive.ChainInterceptors(p.option.Interceptors...)
 
 	return p, nil
+}
+
+func (pc *pushConsumer) GetNameSrv() internal.Namesrvs {
+	return pc.ns
 }
 
 func (pc *pushConsumer) Start() error {

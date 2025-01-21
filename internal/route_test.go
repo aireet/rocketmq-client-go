@@ -60,7 +60,7 @@ func TestQueryTopicRouteInfoFromServer(t *testing.T) {
 					}, nil
 				}).Times(3)
 
-			data, err := namesrv.queryTopicRouteInfoFromServer("notexisted")
+			data, err := namesrv.QueryTopicRouteInfoFromServer("notexisted")
 			assert.Nil(t, data)
 			assert.Equal(t, errors.ErrTopicNotExist, err)
 		})

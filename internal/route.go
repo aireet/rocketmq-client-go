@@ -113,7 +113,7 @@ func (s *namesrvs) UpdateTopicRouteInfo(topic string) (*TopicRouteData, bool, er
 }
 
 func (s *namesrvs) CheckTopicRouteHasTopic(topic string) bool {
-	_, err := s.queryTopicRouteInfoFromServer(topic)
+	_, err := s.QueryTopicRouteInfoFromServer(topic)
 	if err != nil {
 		return false
 	}
@@ -133,7 +133,7 @@ func (s *namesrvs) UpdateTopicRouteInfoWithDefault(topic string, defaultTopic st
 	if len(defaultTopic) > 0 {
 		t = defaultTopic
 	}
-	routeData, err = s.queryTopicRouteInfoFromServer(t)
+	routeData, err = s.QueryTopicRouteInfoFromServer(t)
 
 	if err != nil {
 		rlog.Warning("query topic route from server error", map[string]interface{}{
@@ -142,7 +142,7 @@ func (s *namesrvs) UpdateTopicRouteInfoWithDefault(topic string, defaultTopic st
 	}
 
 	if routeData == nil {
-		rlog.Warning("queryTopicRouteInfoFromServer return nil", map[string]interface{}{
+		rlog.Warning("QueryTopicRouteInfoFromServer return nil", map[string]interface{}{
 			rlog.LogKeyTopic: topic,
 		})
 		return nil, false, err
@@ -311,7 +311,7 @@ func (s *namesrvs) FindBrokerAddressInSubscribe(brokerName string, brokerId int6
 }
 
 func (s *namesrvs) FetchSubscribeMessageQueues(topic string) ([]*primitive.MessageQueue, error) {
-	routeData, err := s.queryTopicRouteInfoFromServer(topic)
+	routeData, err := s.QueryTopicRouteInfoFromServer(topic)
 
 	if err != nil {
 		return nil, err
@@ -337,9 +337,9 @@ func (s *namesrvs) FetchPublishMessageQueues(topic string) ([]*primitive.Message
 
 	v, exist := s.routeDataMap.Load(topic)
 	if !exist {
-		routeData, err = s.queryTopicRouteInfoFromServer(topic)
+		routeData, err = s.QueryTopicRouteInfoFromServer(topic)
 		if err != nil {
-			rlog.Error("queryTopicRouteInfoFromServer failed", map[string]interface{}{
+			rlog.Error("QueryTopicRouteInfoFromServer failed", map[string]interface{}{
 				rlog.LogKeyTopic: topic,
 			})
 			return nil, err
@@ -383,7 +383,7 @@ func (s *namesrvs) findBrokerVersion(brokerName, brokerAddr string) int32 {
 	return versions[brokerAddr]
 }
 
-func (s *namesrvs) queryTopicRouteInfoFromServer(topic string) (*TopicRouteData, error) {
+func (s *namesrvs) QueryTopicRouteInfoFromServer(topic string) (*TopicRouteData, error) {
 	request := &GetRouteInfoRequestHeader{
 		Topic: topic,
 	}

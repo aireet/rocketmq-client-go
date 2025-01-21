@@ -33,6 +33,11 @@ type MockNamesrvs struct {
 	recorder *MockNamesrvsMockRecorder
 }
 
+func (m *MockNamesrvs) CheckTopicRouteHasTopic(topic string) bool{
+	return true
+}
+
+
 func (m *MockNamesrvs) UpdateTopicRouteInfoWithDefault(topic string, defaultTopic string, defaultQueueNum int) (*TopicRouteData, bool, error) {
 	return m.UpdateTopicRouteInfo(topic)
 }

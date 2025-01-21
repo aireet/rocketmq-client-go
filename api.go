@@ -73,6 +73,8 @@ type PushConsumer interface {
 
 	// GetOffsetDiffMap Get offset difference map
 	GetOffsetDiffMap() map[string]int64
+
+	GetNameSrv() internal.Namesrvs
 }
 
 func NewPushConsumer(opts ...consumer.Option) (PushConsumer, error) {
