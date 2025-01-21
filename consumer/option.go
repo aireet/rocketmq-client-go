@@ -18,6 +18,8 @@ limitations under the License.
 package consumer
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/apache/rocketmq-client-go/v2/hooks"
 	"time"
 
@@ -132,6 +134,7 @@ func defaultPushConsumerOptions() consumerOptions {
 		ConsumeGoroutineNums:       20,
 	}
 	opts.ClientOptions.GroupName = "DEFAULT_CONSUMER"
+	opts.ClientOptions.UnitName = uuid.New().String()
 	return opts
 }
 

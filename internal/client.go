@@ -541,6 +541,7 @@ func (c *rmqClient) ClientID() string {
 	if c.option.UnitName != "" {
 		id += "@" + c.option.UnitName
 	}
+
 	return id
 }
 
