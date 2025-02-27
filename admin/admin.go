@@ -97,7 +97,7 @@ func NewAdmin(opts ...AdminOption) (*admin, error) {
 	for _, opt := range opts {
 		opt(defaultOpts)
 	}
-	namesrv, err := internal.NewNamesrv(defaultOpts.Resolver, defaultOpts.RemotingClientConfig)
+	namesrv, err := internal.NewNamesrv(defaultOpts.Resolver, defaultOpts.RemotingClientConfig, defaultOpts.GroupName)
 	defaultOpts.Namesrv = namesrv
 	if err != nil {
 		return nil, err

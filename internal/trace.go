@@ -261,9 +261,9 @@ func NewTraceDispatcher(traceCfg *primitive.TraceConfig) *traceDispatcher {
 	var srvs *namesrvs
 	var err error
 	if len(traceCfg.NamesrvAddrs) > 0 {
-		srvs, err = NewNamesrv(primitive.NewPassthroughResolver(traceCfg.NamesrvAddrs), nil)
+		srvs, err = NewNamesrv(primitive.NewPassthroughResolver(traceCfg.NamesrvAddrs), nil, "")
 	} else {
-		srvs, err = NewNamesrv(traceCfg.Resolver, nil)
+		srvs, err = NewNamesrv(traceCfg.Resolver, nil, "")
 	}
 
 	if err != nil {

@@ -195,7 +195,7 @@ var clientMap sync.Map
 func GetOrNewRocketMQClient(option ClientOptions, callbackCh chan interface{}) RMQClient {
 	client := &rmqClient{
 		option:       option,
-		remoteClient: remote.NewRemotingClient(option.RemotingClientConfig),
+		remoteClient: remote.NewRemotingClient(option.RemotingClientConfig, option.GroupName),
 		done:         make(chan struct{}),
 	}
 	actual, loaded := clientMap.LoadOrStore(client.ClientID(), client)

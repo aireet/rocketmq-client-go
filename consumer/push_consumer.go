@@ -80,7 +80,7 @@ func NewPushConsumer(opts ...Option) (*pushConsumer, error) {
 	for _, apply := range opts {
 		apply(&defaultOpts)
 	}
-	srvs, err := internal.NewNamesrv(defaultOpts.Resolver, defaultOpts.RemotingClientConfig)
+	srvs, err := internal.NewNamesrv(defaultOpts.Resolver, defaultOpts.RemotingClientConfig, defaultOpts.GroupName)
 	if err != nil {
 		return nil, errors.Wrap(err, "new Namesrv failed.")
 	}

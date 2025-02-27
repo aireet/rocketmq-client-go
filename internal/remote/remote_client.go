@@ -40,6 +40,7 @@ type TcpOption struct {
 	ReadTimeout       time.Duration
 	WriteTimeout      time.Duration
 	UseTls            bool
+	Group             string
 }
 
 //go:generate mockgen -source remote_client.go -destination mock_remote_client.go -self_package github.com/apache/rocketmq-client-go/v2/internal/remote  --package remote RemotingClient
@@ -76,10 +77,12 @@ var defaultTcpOption = TcpOption{
 	WriteTimeout:      time.Second * 120,
 }
 
-func NewRemotingClient(config *RemotingClientConfig) *remotingClient {
+func NewRemotingClient(config *RemotingClientConfig, group string) *remotingClient {
 	if config == nil {
 		config = &DefaultRemotingClientConfig
 	}
+
+	config.Group = group
 
 	return &remotingClient{
 		processors: make(map[int16]ClientRequestFunc),
@@ -155,7 +158,8 @@ func (c *remotingClient) connect(ctx context.Context, addr string) (*tcpConnWrap
 	// it needs additional locker.
 	c.connectionLocker.Lock()
 	defer c.connectionLocker.Unlock()
-	conn, ok := c.connectionTable.Load(addr)
+	cacheName := addr + c.config.Group
+	conn, ok := c.connectionTable.Load(cacheName)
 	if ok {
 		return conn.(*tcpConnWrapper), nil
 	}
@@ -163,7 +167,7 @@ func (c *remotingClient) connect(ctx context.Context, addr string) (*tcpConnWrap
 	if err != nil {
 		return nil, err
 	}
-	c.connectionTable.Store(addr, tcpConn)
+	c.connectionTable.Store(cacheName, tcpConn)
 	go primitive.WithRecover(func() {
 		c.receiveResponse(tcpConn)
 	})
